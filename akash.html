@@ -1,0 +1,941 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Floating Sanctuary UI</title>
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  background:
+    radial-gradient(circle at center, rgba(0, 145, 255, 0.18), transparent 45%),
+    #030914;
+  color: #fff;
+  overflow: hidden;
+  position: relative;
+}
+
+/* =========================
+   BACKGROUND GLOW
+========================= */
+
+body::before {
+  content: "";
+  position: absolute;
+  width: 900px;
+  height: 900px;
+  left: 50%;
+  top: 52%;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    circle,
+    rgba(0, 174, 255, 0.18),
+    rgba(0, 80, 160, 0.08),
+    transparent 70%
+  );
+  filter: blur(30px);
+  animation: backgroundPulse 5s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes backgroundPulse {
+  0%,100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: .65;
+  }
+
+  50% {
+    transform: translate(-50%, -50%) scale(1.15);
+    opacity: 1;
+  }
+}
+
+/* =========================
+   CURRENCY
+========================= */
+
+.currency-container {
+  position: absolute;
+  top: 24px;
+  right: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 20;
+}
+
+.currency-badge {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background: rgba(10, 20, 38, 0.75);
+  border: 1px solid rgba(255,255,255,.15);
+
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+
+  padding: 4px 6px 4px 12px;
+  min-width: 140px;
+  gap: 12px;
+
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease,
+    border-color .3s ease;
+}
+
+.currency-badge:hover {
+  transform: translateX(-6px) scale(1.04);
+
+  border-color: rgba(80,200,255,.7);
+
+  box-shadow:
+    0 0 15px rgba(0,180,255,.35),
+    0 0 35px rgba(0,120,255,.18);
+}
+
+.currency-info {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.icon-gold {
+  background: radial-gradient(circle at 30% 30%, #fff5a0, #ffd700, #b77a00);
+
+  box-shadow:
+    0 0 8px #ffd700,
+    0 0 20px rgba(255,215,0,.4);
+
+  animation: goldPulse 2s infinite;
+}
+
+.icon-gem {
+  background: linear-gradient(
+    135deg,
+    #dfffff,
+    #00bfff,
+    #006eff
+  );
+
+  box-shadow:
+    0 0 10px #00bfff,
+    0 0 25px rgba(0,191,255,.5);
+
+  animation: gemPulse 2s infinite;
+}
+
+@keyframes goldPulse {
+  50% {
+    box-shadow:
+      0 0 15px #ffd700,
+      0 0 30px rgba(255,215,0,.6);
+  }
+}
+
+@keyframes gemPulse {
+  50% {
+    box-shadow:
+      0 0 18px #00bfff,
+      0 0 35px rgba(0,191,255,.7);
+  }
+}
+
+.add-btn {
+  width: 24px;
+  height: 24px;
+
+  background: rgba(255,255,255,.1);
+  border: none;
+  border-radius: 50%;
+
+  color: #fff;
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: .25s;
+}
+
+.add-btn:hover {
+  background: #168dff;
+
+  box-shadow:
+    0 0 10px #168dff,
+    0 0 25px rgba(22,141,255,.8);
+
+  transform: rotate(90deg) scale(1.15);
+}
+
+/* =========================
+   HEADER
+========================= */
+
+.header-panel {
+  position: absolute;
+  top: 32px;
+  left: 40px;
+  max-width: 240px;
+  z-index: 20;
+
+  animation: headerReveal 1.2s ease forwards;
+}
+
+@keyframes headerReveal {
+  from {
+    opacity: 0;
+    transform: translateX(-35px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.header-panel h1 {
+  font-size: 22px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+  line-height: 1.1;
+
+  text-shadow:
+    0 0 10px rgba(150,220,255,.25);
+}
+
+.divider {
+  width: 100%;
+  height: 1px;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.6),
+      transparent
+    );
+
+  margin: 10px 0 12px;
+}
+
+.header-panel p {
+  font-size: 11px;
+  color: rgba(255,255,255,.6);
+  line-height: 1.4;
+  margin-bottom: 16px;
+}
+
+/* =========================
+   BUTTON COMMON EFFECT
+========================= */
+
+.btn-explore,
+.btn-enter,
+.icon-btn {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform .3s ease,
+    box-shadow .3s ease,
+    border-color .3s ease,
+    background .3s ease;
+}
+
+/* Moving shine */
+
+.btn-explore::before,
+.btn-enter::before,
+.icon-btn::before {
+  content: "";
+
+  position: absolute;
+  top: 0;
+  left: -120%;
+
+  width: 70%;
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      transparent,
+      rgba(255,255,255,.45),
+      transparent
+    );
+
+  transform: skewX(-25deg);
+}
+
+.btn-explore:hover::before,
+.btn-enter:hover::before,
+.icon-btn:hover::before {
+  animation: buttonShine .7s ease;
+}
+
+@keyframes buttonShine {
+  to {
+    left: 150%;
+  }
+}
+
+/* =========================
+   EXPLORE BUTTON
+========================= */
+
+.btn-explore {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  background: rgba(15,30,60,.6);
+
+  border: 1px solid rgba(255,255,255,.3);
+
+  color: #fff;
+
+  padding: 7px 18px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(8px);
+}
+
+.btn-explore:hover {
+  transform: translateY(-4px) scale(1.05);
+
+  border-color: #55cfff;
+
+  background: rgba(18,100,170,.5);
+
+  box-shadow:
+    0 0 10px rgba(0,180,255,.6),
+    0 0 30px rgba(0,150,255,.35),
+    inset 0 0 15px rgba(80,200,255,.15);
+}
+
+/* =========================
+   3D IMAGE
+========================= */
+
+.visual {
+  position: absolute;
+
+  left: 50%;
+  top: 50%;
+
+  width: min(72vw, 1050px);
+  height: min(72vh, 750px);
+
+  transform:
+    translate(-50%, -50%)
+    perspective(1400px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transform-style: preserve-3d;
+
+  z-index: 5;
+
+  animation: visualFloat 5s ease-in-out infinite;
+}
+
+@keyframes visualFloat {
+
+  0%,100% {
+    margin-top: 0;
+  }
+
+  50% {
+    margin-top: -12px;
+  }
+}
+
+/* Blue aura behind image */
+
+.visual::before {
+  content: "";
+
+  position: absolute;
+
+  width: 65%;
+  height: 65%;
+
+  border-radius: 50%;
+
+  background:
+    radial-gradient(
+      circle,
+      rgba(0,190,255,.28),
+      rgba(0,120,255,.12),
+      transparent 70%
+    );
+
+  filter: blur(50px);
+
+  z-index: -2;
+
+  animation: auraPulse 4s ease-in-out infinite;
+}
+
+@keyframes auraPulse {
+
+  0%,100% {
+    transform: scale(.9);
+    opacity: .5;
+  }
+
+  50% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+}
+
+/* Image */
+
+.visual img {
+
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: contain;
+
+  border-radius: 20px;
+
+  transform-style: preserve-3d;
+
+  filter:
+    drop-shadow(0 30px 40px rgba(0,0,0,.55))
+    drop-shadow(0 0 20px rgba(0,170,255,.12));
+
+  transition:
+    filter .4s ease,
+    transform .4s ease;
+}
+
+/* IMAGE HOVER */
+
+.visual:hover img {
+
+  filter:
+    drop-shadow(0 35px 45px rgba(0,0,0,.6))
+    drop-shadow(0 0 25px rgba(0,190,255,.4))
+    drop-shadow(0 0 70px rgba(0,110,255,.2));
+
+}
+
+/* =========================
+   IMAGE GLOW BORDER
+========================= */
+
+.visual::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: 8%;
+
+  border-radius: 30px;
+
+  border: 1px solid rgba(80,210,255,.15);
+
+  box-shadow:
+    0 0 30px rgba(0,180,255,.08),
+    inset 0 0 30px rgba(0,150,255,.05);
+
+  pointer-events: none;
+
+  animation: borderGlow 3s ease-in-out infinite;
+}
+
+@keyframes borderGlow {
+
+  0%,100% {
+    opacity: .3;
+  }
+
+  50% {
+    opacity: .9;
+  }
+}
+
+/* =========================
+   BOTTOM LEFT
+========================= */
+
+.bottom-left-nav {
+
+  position: absolute;
+
+  bottom: 32px;
+  left: 40px;
+
+  display: flex;
+  gap: 16px;
+
+  z-index: 20;
+}
+
+.icon-btn {
+
+  width: 44px;
+  height: 44px;
+
+  border-radius: 50%;
+
+  background: rgba(10,20,38,.6);
+
+  border: 1px solid rgba(255,255,255,.2);
+
+  color: #fff;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(8px);
+
+  font-size: 18px;
+}
+
+.icon-btn:hover {
+
+  transform:
+    translateY(-6px)
+    scale(1.12);
+
+  border-color: #4dcaff;
+
+  color: #7cdbff;
+
+  background: rgba(10,70,110,.65);
+
+  box-shadow:
+    0 0 12px rgba(0,190,255,.7),
+    0 0 30px rgba(0,130,255,.35);
+}
+
+/* =========================
+   ENTER WORLD
+========================= */
+
+.btn-enter {
+
+  position: absolute;
+
+  bottom: 32px;
+  right: 40px;
+
+  padding: 14px 32px;
+
+  background:
+    linear-gradient(
+      180deg,
+      #1b6edb 0%,
+      #0a3479 100%
+    );
+
+  border: 1px solid rgba(130,220,255,.55);
+
+  border-radius: 24px;
+
+  color: #fff;
+
+  font-size: 14px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.5px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 15px rgba(0,0,0,.4),
+    0 0 10px rgba(0,130,255,.25);
+
+  z-index: 20;
+}
+
+.btn-enter:hover {
+
+  transform:
+    translateY(-5px)
+    scale(1.05);
+
+  background:
+    linear-gradient(
+      180deg,
+      #2a9cff,
+      #0950aa
+    );
+
+  border-color: #8be4ff;
+
+  box-shadow:
+
+    0 0 10px #35bfff,
+    0 0 30px #168dff,
+    0 0 65px rgba(0,140,255,.6),
+    inset 0 0 15px rgba(255,255,255,.15);
+}
+
+/* Pulsing outer glow */
+
+.btn-enter::after {
+
+  content: "";
+
+  position: absolute;
+
+  inset: -5px;
+
+  border-radius: inherit;
+
+  border: 1px solid rgba(40,190,255,.35);
+
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.btn-enter:hover::after {
+
+  animation: enterPulse 1.3s infinite;
+}
+
+@keyframes enterPulse {
+
+  0% {
+    transform: scale(.95);
+    opacity: .8;
+  }
+
+  100% {
+    transform: scale(1.15);
+    opacity: 0;
+  }
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:800px) {
+
+  .header-panel {
+    left: 20px;
+    top: 20px;
+  }
+
+  .currency-container {
+    right: 15px;
+    top: 15px;
+  }
+
+  .currency-badge {
+    min-width: 110px;
+  }
+
+  .visual {
+    width: 120vw;
+    height: 75vh;
+  }
+
+  .bottom-left-nav {
+    left: 20px;
+    bottom: 20px;
+  }
+
+  .btn-enter {
+    right: 20px;
+    bottom: 20px;
+    padding: 12px 20px;
+    font-size: 11px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     TOP LEFT
+========================= -->
+
+<div class="header-panel">
+
+  <h1>
+    Floating<br>
+    Sanctuary
+  </h1>
+
+  <div class="divider"></div>
+
+  <p>
+    Lorem ipsum dolor sit amet,
+    consectetur adipiscing elit,
+    sed do eiusmod tempor incididunt
+    ut labore et dolore magna aliqua.
+  </p>
+
+  <button class="btn-explore">
+    ▶ &nbsp; EXPLORE
+  </button>
+
+</div>
+
+
+<!-- =========================
+     CURRENCY
+========================= -->
+
+<div class="currency-container">
+
+  <div class="currency-badge">
+
+    <div class="currency-info">
+
+      <span class="icon icon-gold"></span>
+
+      <span>12,450</span>
+
+    </div>
+
+    <button class="add-btn">
+      +
+    </button>
+
+  </div>
+
+
+  <div class="currency-badge">
+
+    <div class="currency-info">
+
+      <span class="icon icon-gem"></span>
+
+      <span>3,280</span>
+
+    </div>
+
+    <button class="add-btn">
+      +
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- =========================
+     3D SANCTUARY
+========================= -->
+
+<div class="visual" id="visual">
+
+  <img
+    src="Floating Sanctuary.png"
+    alt="Floating Sanctuary 3D scene"
+  />
+
+</div>
+
+
+<!-- =========================
+     BOTTOM NAV
+========================= -->
+
+<div class="bottom-left-nav">
+
+  <button class="icon-btn">
+    ‹
+  </button>
+
+  <button class="icon-btn">
+    ⚙
+  </button>
+
+  <button class="icon-btn">
+    👤
+  </button>
+
+</div>
+
+
+<!-- =========================
+     ENTER WORLD
+========================= -->
+
+<button class="btn-enter">
+  ENTER WORLD
+</button>
+
+
+<script>
+
+/* =====================================
+   3D MOUSE PARALLAX
+===================================== */
+
+const visual = document.getElementById("visual");
+
+let targetX = 0;
+let targetY = 0;
+
+let currentX = 0;
+let currentY = 0;
+
+document.addEventListener("mousemove", (event) => {
+
+  const x =
+    event.clientX / window.innerWidth - 0.5;
+
+  const y =
+    event.clientY / window.innerHeight - 0.5;
+
+  targetY = x * 14;
+  targetX = -y * 10;
+
+});
+
+
+function animate3D() {
+
+  currentX +=
+    (targetX - currentX) * 0.06;
+
+  currentY +=
+    (targetY - currentY) * 0.06;
+
+  visual.style.transform =
+    `
+      translate(-50%, -50%)
+      perspective(1400px)
+      rotateX(${currentX}deg)
+      rotateY(${currentY}deg)
+    `;
+
+  requestAnimationFrame(animate3D);
+}
+
+animate3D();
+
+
+/* =====================================
+   RETURN TO CENTER
+===================================== */
+
+document.addEventListener("mouseleave", () => {
+
+  targetX = 0;
+  targetY = 0;
+
+});
+
+
+/* =====================================
+   ENTER BUTTON
+===================================== */
+
+const enterButton =
+  document.querySelector(".btn-enter");
+
+enterButton.addEventListener("click", () => {
+
+  enterButton.innerHTML =
+    "ENTERING WORLD...";
+
+  enterButton.style.boxShadow =
+    `
+      0 0 20px #00c8ff,
+      0 0 50px #008cff,
+      0 0 100px rgba(0,150,255,.8)
+    `;
+
+  setTimeout(() => {
+
+    enterButton.innerHTML =
+      "ENTER WORLD";
+
+  }, 2000);
+
+});
+
+
+/* =====================================
+   EXPLORE BUTTON
+===================================== */
+
+const explore =
+  document.querySelector(".btn-explore");
+
+explore.addEventListener("click", () => {
+
+  explore.innerHTML =
+    "✦ EXPLORING...";
+
+  setTimeout(() => {
+
+    explore.innerHTML =
+      "▶ EXPLORE";
+
+  }, 1800);
+
+});
+
+
+/* =====================================
+   ADD BUTTON
+===================================== */
+
+document.querySelectorAll(".add-btn")
+.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    button.innerHTML = "✓";
+
+    setTimeout(() => {
+      button.innerHTML = "+";
+    }, 800);
+
+  });
+
+});
+
+</script>
+
+</body>
+</html>
